@@ -58,11 +58,29 @@
             <button class="filter-btn" data-group="low">저성</button>
           </div>
           <div id="consonant-grid" class="consonant-grid"></div>
-          <div class="quiz-trigger"><button id="btn-letter-quiz" class="btn-primary">퀴즈 시작</button></div>
+          <div class="quiz-trigger">
+            <button id="btn-letter-quiz" class="btn-primary">퀴즈 시작</button>
+          </div>
         </div>
       </div>
 
-      </main>
+      <div id="tab-words" class="tab-content hidden">
+        <div class="tab-inner">
+          <div class="section-head">
+            <h2 class="section-title">단어 <span class="title-thai">คำศัพท์</span></h2>
+          </div>
+          <div id="category-list" class="category-list"></div>
+        </div>
+      </div>
+
+      <div id="tab-today" class="tab-content hidden">
+        <div class="tab-inner">
+          <div class="section-head">
+            <h2 class="section-title">오늘 <span class="title-thai">วันนี้</span></h2>
+          </div>
+          </div>
+      </div>
+    </main>
 
     <nav class="tab-bar">
       <button class="tab-btn active" data-tab="letters"><span>문자</span></button>
@@ -78,7 +96,6 @@
     import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
     import App from './app.js';
 
-    // 사용자가 제공한 Firebase 설정값
     const firebaseConfig = {
       apiKey: "AIzaSyAp7ieanqyVA9ojlHgUsptTO-tWPLXtEJo",
       authDomain: "thai-learn-d031a.firebaseapp.com",
@@ -94,56 +111,11 @@
     const db = getFirestore(firebaseApp);
     const provider = new GoogleAuthProvider();
 
-    // 전역 객체에 할당하여 app.js에서 참조 가능하게 설정
+    // 전역 변수에 Firebase 인스턴스들을 담아 app.js에서 사용할 수 있게 함
     window.__firebase = { auth, db, provider, signInWithPopup, signOut, onAuthStateChanged };
 
-    // 앱 인스턴스 실행
-    const appInstance = new App();
-
-    // --- 로그인/로그아웃 버튼 이벤트 처리 ---
-    const btnLogin = document.getElementById('btn-google-login');
-    const btnLogout = document.getElementById('btn-logout');
-    const loading = document.getElementById('login-loading');
-
-    // 로그인 실행
-    btnLogin.addEventListener('click', async () => {
-      loading.classList.remove('hidden');
-      try {
-        await signInWithPopup(auth, provider);
-      } catch (error) {
-        console.error("로그인 실패:", error);
-        alert("로그인에 실패했습니다.");
-      } finally {
-        loading.classList.add('hidden');
-      }
-    });
-
-    // 로그아웃 실행
-    btnLogout.addEventListener('click', () => {
-      if(confirm("로그아웃 하시겠습니까?")) {
-        signOut(auth);
-      }
-    });
-
-    // 인증 상태 감지에 따른 화면 전환
-    onAuthStateChanged(auth, (user) => {
-      const screenLogin = document.getElementById('screen-login');
-      const screenApp = document.getElementById('screen-app');
-
-      if (user) {
-        screenLogin.classList.add('hidden');
-        screenLogin.classList.remove('active');
-        screenApp.classList.remove('hidden');
-        screenApp.classList.add('active');
-        console.log("로그인됨:", user.displayName);
-      } else {
-        screenLogin.classList.remove('hidden');
-        screenLogin.classList.add('active');
-        screenApp.classList.add('hidden');
-        screenApp.classList.remove('active');
-        console.log("로그아웃됨");
-      }
-    });
+    // App 클래스 실행 - 모든 UI 제어 및 인증 리스너는 app.js 내부에서 처리됨
+    new App();
   </script>
 </body>
 </html>
