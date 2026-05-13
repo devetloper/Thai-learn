@@ -14,6 +14,7 @@
 </head>
 <body>
 
+  <!-- 로그인 화면 -->
   <div id="screen-login" class="screen active">
     <div class="login-wrap">
       <div class="login-logo">
@@ -31,9 +32,14 @@
     </div>
   </div>
 
+  <!-- 메인 앱 화면 -->
   <div id="screen-app" class="screen hidden">
+
+    <!-- 상단 헤더 -->
     <header class="app-header">
-      <div class="header-left"><span class="header-title">ภาษาไทย</span></div>
+      <div class="header-left">
+        <span class="header-title">ภาษาไทย</span>
+      </div>
       <div class="header-right">
         <div id="streak-badge" class="streak-badge">
           <span class="streak-fire">🔥</span>
@@ -45,77 +51,199 @@
       </div>
     </header>
 
+    <!-- 탭 콘텐츠 -->
     <main class="app-main">
+
+      <!-- 탭: 문자 -->
       <div id="tab-letters" class="tab-content active">
         <div class="tab-inner">
           <div class="section-head">
             <h2 class="section-title">자음 <span class="title-thai">พยัญชนะ</span></h2>
+            <p class="section-sub">44개 자음을 그룹별로 학습해요</p>
           </div>
+
+          <!-- 그룹 필터 -->
           <div class="group-filter">
             <button class="filter-btn active" data-group="all">전체</button>
             <button class="filter-btn" data-group="mid">중성</button>
             <button class="filter-btn" data-group="high">고성</button>
             <button class="filter-btn" data-group="low">저성</button>
           </div>
+
+          <!-- 자음 그리드 -->
           <div id="consonant-grid" class="consonant-grid"></div>
+
+          <!-- 퀴즈 버튼 -->
           <div class="quiz-trigger">
-            <button id="btn-letter-quiz" class="btn-primary">퀴즈 시작</button>
+            <button id="btn-letter-quiz" class="btn-primary">
+              퀴즈 시작
+              <span class="btn-sub">틀린 자음 위주로</span>
+            </button>
           </div>
         </div>
       </div>
 
+      <!-- 탭: 단어 -->
       <div id="tab-words" class="tab-content hidden">
         <div class="tab-inner">
           <div class="section-head">
             <h2 class="section-title">단어 <span class="title-thai">คำศัพท์</span></h2>
+            <!-- 검색창 -->
+            <div class="search-wrap">
+              <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input id="word-search" type="text" placeholder="태국어, 한국어로 검색..." class="search-input" />
+              <button id="search-clear" class="search-clear hidden">✕</button>
+            </div>
           </div>
+
+          <!-- 검색 결과 -->
+          <div id="search-results" class="search-results hidden"></div>
+
+          <!-- 카테고리 목록 -->
           <div id="category-list" class="category-list"></div>
         </div>
       </div>
 
+      <!-- 탭: 오늘 -->
       <div id="tab-today" class="tab-content hidden">
         <div class="tab-inner">
           <div class="section-head">
             <h2 class="section-title">오늘 <span class="title-thai">วันนี้</span></h2>
           </div>
+
+          <!-- 스트릭 -->
+          <div class="streak-card">
+            <div class="streak-main">
+              <span class="streak-emoji">🔥</span>
+              <div class="streak-info">
+                <span id="today-streak-num" class="streak-big">0</span>
+                <span class="streak-label">일 연속</span>
+              </div>
+            </div>
+            <div id="streak-calendar" class="streak-calendar"></div>
+            <div id="streak-broken-msg" class="streak-broken hidden">
+              <p>스트릭이 끊겼어요. 오늘부터 다시 시작해요 💪</p>
+              <button id="btn-restart-streak" class="btn-secondary">다시 시작하기</button>
+            </div>
           </div>
+
+          <!-- 오늘 목표 -->
+          <div class="today-goal">
+            <div class="goal-header">
+              <span class="goal-title">오늘 목표</span>
+              <span id="goal-progress-text" class="goal-progress-text">0 / 5</span>
+            </div>
+            <div class="goal-bar">
+              <div id="goal-bar-fill" class="goal-bar-fill" style="width:0%"></div>
+            </div>
+            <p class="goal-hint">최소 5개만 학습해도 스트릭이 유지돼요</p>
+          </div>
+
+          <!-- 오늘 학습 현황 -->
+          <div class="stats-row">
+            <div class="stat-box">
+              <span id="stat-letters" class="stat-num">0</span>
+              <span class="stat-label">자음 학습</span>
+            </div>
+            <div class="stat-box">
+              <span id="stat-words" class="stat-num">0</span>
+              <span class="stat-label">단어 학습</span>
+            </div>
+            <div class="stat-box">
+              <span id="stat-review" class="stat-num">0</span>
+              <span class="stat-label">복습 완료</span>
+            </div>
+          </div>
+
+          <!-- 복습 큐 -->
+          <div class="review-section">
+            <div class="review-header">
+              <span class="review-title">복습 대기</span>
+              <span id="review-count-badge" class="review-badge">0</span>
+            </div>
+            <div id="review-queue-preview" class="review-preview"></div>
+            <button id="btn-start-review" class="btn-primary" disabled>
+              복습 시작
+              <span class="btn-sub" id="review-btn-sub">복습할 항목이 없어요</span>
+            </button>
+          </div>
+
+        </div>
       </div>
+
     </main>
 
+    <!-- 하단 탭바 -->
     <nav class="tab-bar">
-      <button class="tab-btn active" data-tab="letters"><span>문자</span></button>
-      <button class="tab-btn" data-tab="words"><span>단어</span></button>
-      <button class="tab-btn" data-tab="today"><span>오늘</span></button>
+      <button class="tab-btn active" data-tab="letters">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+        <span>문자</span>
+      </button>
+      <button class="tab-btn" data-tab="words">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+        <span>단어</span>
+      </button>
+      <button class="tab-btn" data-tab="today">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>오늘</span>
+      </button>
     </nav>
+
   </div>
 
+  <!-- 오버레이: 자음 상세 모달 -->
+  <div id="modal-letter" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close">✕</button>
+      <div id="modal-letter-content"></div>
+    </div>
+  </div>
+
+  <!-- 오버레이: 플래시카드 (단어/자음 퀴즈 공용) -->
+  <div id="modal-flashcard" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card flashcard-card">
+      <button class="modal-close">✕</button>
+      <div id="flashcard-content"></div>
+    </div>
+  </div>
+
+  <!-- 오버레이: 카테고리 단어 목록 -->
+  <div id="modal-category" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card category-modal-card">
+      <button class="modal-close">✕</button>
+      <div id="modal-category-content"></div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } 
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
     import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
     import App from './app.js';
 
+    // ⚠️ Firebase 설정은 배포 시 본인 프로젝트 값으로 교체하세요
     const firebaseConfig = {
-      apiKey: "AIzaSyAp7ieanqyVA9ojlHgUsptTO-tWPLXtEJo",
-      authDomain: "thai-learn-d031a.firebaseapp.com",
-      projectId: "thai-learn-d031a",
-      storageBucket: "thai-learn-d031a.firebasestorage.app",
-      messagingSenderId: "1029695958196",
-      appId: "1:1029695958196:web:ed1de528c422848c9b3be1"
+      apiKey: "REPLACE_WITH_YOUR_API_KEY",
+      authDomain: "REPLACE_WITH_YOUR_AUTH_DOMAIN",
+      projectId: "REPLACE_WITH_YOUR_PROJECT_ID",
+      storageBucket: "REPLACE_WITH_YOUR_STORAGE_BUCKET",
+      messagingSenderId: "REPLACE_WITH_YOUR_MESSAGING_SENDER_ID",
+      appId: "REPLACE_WITH_YOUR_APP_ID"
     };
 
-    // Firebase 초기화
     const firebaseApp = initializeApp(firebaseConfig);
     const auth = getAuth(firebaseApp);
     const db = getFirestore(firebaseApp);
     const provider = new GoogleAuthProvider();
 
-    // 전역 변수에 Firebase 인스턴스들을 담아 app.js에서 사용할 수 있게 함
     window.__firebase = { auth, db, provider, signInWithPopup, signOut, onAuthStateChanged };
-
-    // App 클래스 실행 - 모든 UI 제어 및 인증 리스너는 app.js 내부에서 처리됨
     new App();
   </script>
+
 </body>
 </html>
