@@ -7,12 +7,21 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#0f0f0f" />
   <title>ภาษาไทย · 태국어 학습</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
+  <meta name="apple-mobile-web-app-title" content="태국어 학습" />
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Pretendard:wght@300;400;500;600&display=swap" rel="stylesheet" />
 </head>
 <body>
+
+  <!-- 업데이트 감지 토스트 -->
+  <div id="update-toast" class="update-toast hidden">
+    <span>새 버전이 있어요 ✨</span>
+    <button id="btn-update">업데이트</button>
+  </div>
 
   <!-- 로그인 화면 -->
   <div id="screen-login" class="screen active">
@@ -242,6 +251,40 @@
 
     window.__firebase = { auth, db, provider, signInWithPopup, signOut, onAuthStateChanged };
     new App();
+  </script>
+
+  <!-- 서비스워커 등록 + 업데이트 감지 -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async () => {
+        try {
+          const reg = await navigator.serviceWorker.register('./service-worker.js');
+
+          // 업데이트 감지
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // 새 버전 있음 → 토스트 표시
+                document.getElementById('update-toast').classList.remove('hidden');
+
+                document.getElementById('btn-update').addEventListener('click', () => {
+                  newWorker.postMessage('SKIP_WAITING');
+                  window.location.reload();
+                });
+              }
+            });
+          });
+        } catch (e) {
+          console.log('SW 등록 실패:', e);
+        }
+      });
+
+      // SW 교체 완료 시 자동 새로고침
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        window.location.reload();
+      });
+    }
   </script>
 
 </body>
