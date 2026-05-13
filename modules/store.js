@@ -2,7 +2,7 @@
 
 import {
   doc, getDoc, setDoc, updateDoc, serverTimestamp
-} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+} from 'https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js';
 
 export class Store {
   constructor(db, userId) {
